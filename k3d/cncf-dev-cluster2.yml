@@ -1,0 +1,27 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: cncf-dev-cluster2
+servers: 1
+agents: 2
+kubeAPI:
+  host: "master.127.0.0.1.nip.io"
+  hostIP: "127.0.0.1"
+  hostPort: "6447"
+image: rancher/k3s:v1.24.17-k3s1
+ports:
+  - port: 8083:80
+    nodeFilters:
+      - loadbalancer
+options:
+  k3d:
+    wait: true
+    timeout: "60s"
+  k3s:
+    extraArgs:
+      - arg: --tls-san=127.0.0.1.nip.io
+        nodeFilters:
+          - server:*
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
